@@ -1,0 +1,73 @@
+{%extends 'base.html'%}
+{%block content%}
+<style>
+  .trial {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .img img {
+    width: 300px;
+    height: 300px;
+   
+  }
+  body{
+    overflow-x: hidden;
+    padding-left:50px;
+    padding-right: 50px;
+  }
+</style>
+<br><br><br><br>
+<body style="background-color:darkgrey;" >
+  <div class="container-fluid text-center"style="background-color: teal; padding:100px;" >
+    <h1 class="">Awwards</h1>
+    <br><br><br><br>
+  </div>
+  <br>
+  <div class="trial row">
+    {% for project in projects %}
+  
+    <div class="col-md-4">
+      <div class="img">
+       
+        <!-- Button trigger modal -->
+        <a href="" data-bs-toggle="modal" data-bs-target="#exampleModal{{project.id}}">
+          <img src="{{project.landingpage_pic.url}}" alt="" class="responsive">
+          <h4>{{project.title}}</h4>
+        </a>
+  
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal{{image.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header" style="background-color: blue;">
+                <h5 class="modal-title" id="exampleModalLabel">{{project.title}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" style="background-color: grey;">
+                <p><img src="{{image.landingpage_pic.url}}" ></p>
+                <p>{{project.description}}</p>
+                <p>{{project.date_posted}}</p>
+                <p>{{project.link}}</p>
+              </div>
+              <div class="modal-footer" style="background-color: blueviolet;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    
+    </div>
+    {% endfor %} 
+  </div>
+  <div class="container">
+    <form role="form" class="pt-3" action="/search">
+      <div class="form-group">
+        <input type="text" class="form-control mt-5 " placeholder="Search category">
+        <button type="submit" class="btn btn-warning mt-1">SEARCH</button>
+      </div>
+  </div>
+  {%endblock%}
+</body>
