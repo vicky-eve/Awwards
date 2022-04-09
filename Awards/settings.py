@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'awardapp.apps.AwardappConfig',
     'bootstrap5',
     'rest_framework',
+    'phone_field',
+
 ]
 
 MIDDLEWARE = [
