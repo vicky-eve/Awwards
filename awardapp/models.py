@@ -2,6 +2,8 @@ from distutils.command.upload import upload
 from phone_field import PhoneField
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 class Project(models.Model):
@@ -16,6 +18,23 @@ class Project(models.Model):
     def search_project(cls, user):
         return cls.objects.filter(user__username__icontains=user).all()
 
+    def __str__(self):
+        return f'{self.title}'
+
+    def delete_project(self):
+        self.delete()
+
+    @classmethod
+    def search_project(cls, title):
+        return cls.objects.filter(title__icontains=title).all()
+
+    @classmethod
+    def all_projects(cls):
+        return cls.objects.all()
+
+    def save_project(self):
+        self.save()
+
 class Profile(models.Model):
     username = models.TextField(max_length=50, blank=True)
     bio = models.TextField(max_length=200, blank=True)
@@ -27,6 +46,19 @@ class Profile(models.Model):
     def search_profile(cls, user):
         return cls.objects.filter(user__username__icontains=user).all()
 
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review')
     usability = models.IntegerField(default=0)
@@ -34,4 +66,15 @@ class Review(models.Model):
     creativity = models.IntegerField(default=0)
     content = models.IntegerField(default=0)
     developer = models.IntegerField(default=0)
+
+    def save_review(self):
+        self.save()
+
+    @classmethod
+    def get_review(cls, id):
+        reviews = Review.objects.filter(project_id=id).all()
+        return reviews
+
+    def __str__(self):
+        return f'{self.project} Review'
    
