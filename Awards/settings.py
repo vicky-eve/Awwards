@@ -11,9 +11,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from decouple import config,Csv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+cloudinary.config( 
+    cloud_name =config('CLOUD_NAME'),
+    api_key=config('CLOUD_API_KEY'), 
+    api_secret=config('API_SECRET'),
+)
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'phone_field',
     'rest_framework.authtoken',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
