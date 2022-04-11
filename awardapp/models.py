@@ -4,11 +4,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Project(models.Model):
     title = models.TextField(max_length=50)
-    landingpage_pic = models.ImageField(upload_to=('images/'), null=True)
+    landingpage_pic = CloudinaryField('images', null=True)
     description = models.TextField(max_length=200)
     date_posted = models.DateTimeField(auto_now_add=True,blank=True)
     link = models.URLField(max_length=300)
@@ -39,7 +40,7 @@ class Profile(models.Model):
     username = models.TextField(max_length=50, blank=True)
     bio = models.TextField(max_length=200, blank=True)
     contact_info = PhoneField(max_length=11, blank=True)
-    profile_pic = models.ImageField(upload_to=('images/'))
+    profile_pic = CloudinaryField('images', null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
 
     @classmethod
@@ -61,11 +62,13 @@ class Profile(models.Model):
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='review')
-    usability = models.IntegerField(default=0)
-    design = models.IntegerField(default=0)
-    creativity = models.IntegerField(default=0)
-    content = models.IntegerField(default=0)
-    developer = models.IntegerField(default=0)
+    usability = models.IntegerField(default=0,blank=True, null=True)
+    design = models.IntegerField(default=0,blank=True, null=True)
+    creativity = models.IntegerField(default=0,blank=True, null=True)
+    content = models.IntegerField(default=0,blank=True, null=True)
+    developer = models.IntegerField(default=0, blank=True, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
+    average = models.IntegerField(default=0, blank=True, null=True)
 
     def save_review(self):
         self.save()
@@ -76,5 +79,5 @@ class Review(models.Model):
         return reviews
 
     def __str__(self):
-        return f'{self.project} Review'
+        return self.user.username 
    
