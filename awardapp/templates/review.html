@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<style>
+    .aimg {
+        width: 10%;
+        height: auto;
+    }
+
+    body{
+        font-family: 'Lato', global_font_string;
+        font-weight: 500;
+        background-color: black;
+        color: white;
+       
+    }
+    .project{
+        margin-top: 5%;
+    }
+    .rating{
+        margin-top: 5%;
+    }
+    h2{
+        text-align: center;
+    }
+</style>
+{% if project.landingpage_pic %}
+<div class="container-fluid project">
+    
+    <div class="header">
+                    <h2 class="text-center">{{ project.title }}</h2>
+    </div>
+    <section class="single-top-header"
+        style="height: 75vh; margin-bottom: 5%; background-repeat: no-repeat;background-size: cover;background-position: center; background-image: url({{project.landingpage_pic.url}})">
+
+        {% else %}
+        <section class="single-top-header">
+            {% endif %}
+
+        </section>
+        
+    </section>
+    <div class="row">
+        <div class="col-md-4">
+        <p> {% if pofile.profile_pic %}
+            <img src="{{ profile.profile_pic }}" alt="author" class="aimg mt-3">
+            {% else %}
+            <img src="https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png"
+                alt="{{ user.username }}" class="aimg">
+            {% endif %} 
+            <p><b>{{ user.username }}</b></p>
+
+        </p>
+
+        </div>
+            <div class="col-md-8">
+                        <p>Description: {{ project.description|safe }}</p>
+                        <a href="{{project.link}}" class="btn btn-outline-info bg-info text-white rounded-pill">View
+                            Project</a>
+    
+                        <p>Date: {{ project.date_posted|date }}</p>
+            </div>
+
+    </div>
+    <div class="row rating">
+        <div class="col-md-6">
+            <form action="{% url 'review' project.id %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="Design">Design</label>
+                    <input type="number" class="form-control" name="design" min="0" max="10" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="Content">Usability</label>
+                    <input type="number" class="form-control" name="usability" min="0" max="10" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="Usability">Content</label>
+                    <input type="number" class="form-control" name="content" min="0" max="10" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="Usability">Creativity</label>
+                    <input type="number" class="form-control" name="creativity" min="0" max="10" value="0">
+                </div>
+                <div class="mb-3">
+                    <label for="Usability">Developer</label>
+                    <input type="number" class="form-control" name="developer" min="0" max="10" value="0">
+                </div>
+                <button class="btn btn-outline-info bg-info text-white rounded-pill" type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-center">
+                <b>REVIEW</b></h2>
+       
+           <p>
+               {% for review in review %}
+           
+               <div class="row text-center">
+                   <div class="col-md-2">
+                       <p>{{user.username}}</p>
+                   </div>
+                   <div class="col-md-3">
+                       <p>Design: {{review.design}}</p>
+                   </div>
+                   <div class="col-md-3">
+                       <p>Content: {{review.content}}</p>
+                   </div>
+                   <div class="col-md-2">
+                       <p>Usability:{{review.usability}}</p>
+                   </div>
+                   <div class="col-md-2">
+                    <p>Creativity:{{review.creativity}}</p>
+                </div>
+                <div class="col-md-2">
+                    <p>Developer:{{review.developer}}</p>
+                </div>
+                   <div class="col-md-2">
+                    <p>Average:{{review.average}}</p>
+                   </div>
+               </div>
+               {% empty %}
+               <p class="alert alert-danger" role="alert">No reviews!</p>
+               {% endfor %}
+       
+           </p>
+       </div>
+    </div>
+    
+</div>
+
+
+{% endblock %}
